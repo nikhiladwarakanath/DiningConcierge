@@ -1,0 +1,45 @@
+<html>
+    <head>
+            <link type="text/css" rel="stylesheet" href="../style/stylehome.css">
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    </head>
+
+<body>
+
+    <div class="mainHead">
+        <div class="head">
+            <span>Dining Concierge</span>
+        </div>
+    </div>
+    <div class="chat">
+        <div class="main">
+        </div>
+    </div>
+    <div class="send">
+        <!--<input type="input" class="txt1 form-cotrol">-->
+        <textarea class="form-control txt1" rows="3"></textarea>
+        <input type="button" class="btn btn1" value="SEND" onclick="sender()">
+    </div>
+</body>
+<script>
+$('body').ready(function() {
+  res('Hi!')
+});
+
+function sender() {
+  var msg = $('.txt1').val();
+  $('.main').append('<div class="txt-div" ><div class="txt msg">'+msg+'</div><div class="time">'+new Date().toLocaleTimeString()+'</div></div>');
+  $('.txt1').val('');
+  $('.chat').scrollTop = $('.chat').scrollHeight;
+}
+
+function res(msg) {
+  $('.main').append('<div class="txt-div2" ><div class="txt2 msg">'+msg+'</div><div class="time2">'+new Date().toLocaleTimeString()+'</div></div>');
+}
+
+//var chat = {"Hi":"Hi","Hi2":"Hi2","Hi3":"Hi3"}
+
+
+</script>
+
+</html>
