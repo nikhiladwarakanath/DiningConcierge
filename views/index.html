@@ -1,45 +1,120 @@
+<!doctype html>
 <html>
-    <head>
-            <link type="text/css" rel="stylesheet" href="../style/stylehome.css">
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    </head>
-
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Karla" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>ChatBot Example</title>
+    <link rel="stylesheet" href="../style/stylehome.css">
+</head>
 <body>
+   
+		<div id="menuoptions">
+      <span id="closebutton">X</span>
+			<div id="StartChat" class="StartChat" tabindex="1">
+			<img src="https://philchallinor.co.uk/images/articles/chatbot.png" id="PersonIcon">
+       
+			<span id="Instruction">
+        
+				Would you like some help?
+			</span>
+		
+			</div>
+   
+			<div id="chatwindow"></div>
+			<div id="usertextboxmessage">
+				<span>
+					<input id="UserInputBox" type="text">
+					<img src="https://philchallinor.co.uk/images/articles/send.png" class="message">
+				</span>
+			</div>
+		</div>
 
-    <div class="mainHead">
-        <div class="head">
-            <span>Dining Concierge</span>
-        </div>
-    </div>
-    <div class="chat">
-        <div class="main">
-        </div>
-    </div>
-    <div class="send">
-        <!--<input type="input" class="txt1 form-cotrol">-->
-        <textarea class="form-control txt1" rows="3"></textarea>
-        <input type="button" class="btn btn1" value="SEND" onclick="sender()">
-    </div>
-</body>
-<script>
-$('body').ready(function() {
-  res('Hi!')
+    <script>
+        $(document).ready(function(){
+	window.globalVar = 1;	
+	
+	//create initial layout
+	
+	
+	
+
+	var ProcessContainer = {
+			ProcessUserMessage: function (e,texttoinput) {
+			window.globalVar += 1;
+			$('.class123').hide();
+
+			setTimeout(function () {
+				$("#chatwindow").append("<div id='dotdotdot'><span id='StuLife" + window.globalVar + "' class='options class123' style='float:left;margin-right: 40px; background-color:#77DD77' onclick='test.myFunction(event,this)'><span class='dotA'></span> <span class='dotB'></span> <span class='dotC'></span> </span></div><div style='clear: both'></div>");		
+			}, 700);
+
+			setTimeout(function () {
+				$('.class123').hide();
+				BotMessageContainer.BotMessage('Message from BOT!');
+				$('#chatwindow').scrollTop($('#chatwindow')[0].scrollHeight);
+			}, 2000);
+		}
+	}
+
+	var UserMessageContainer = {
+    UserMessage: function (e,texttoinput) {
+		$("#chatwindow").append("<div style='width: 100%'><span id='StuLife' class='options' style='background-color: skyblue;margin-left: 40px;float:right' onclick='test.myFunction(event,this)'>" + texttoinput + "</span></div><div style='clear: both'></div>");
+		ProcessContainer.ProcessUserMessage(e,texttoinput);
+		$("#UserInputBox").val("");
+
+		}
+	}
+
+	var BotMessageContainer = {
+		BotMessage: function (replymessage) {
+			$("#chatwindow").append("<div style='width: 100%;'><span id='StuLife"+ window.globalVar + "' class='options' style='float:left;margin-right: 40px;background-color:#77DD77' onclick='test.myFunction(event,this)'>" + replymessage + "</span></div><div style='clear: both'></div>");
+			}
+		}
+
+	var BotMessageWithActionContainer = {
+    BotMessageWithAction: function (id1,class1,onclick1, text1, link) {
+		$("#chatwindow").append("<a href='" + link + "'><div><span id='StuLife"+ window.globalVar + "' class='options' style='float:left;background-color:#77DD77' onclick='test.myFunction(event,this)'>" + text1 + "</span></div><div style='clear: both'></div></a>");
+		}
+	}
+	
+	$("#UserInputBox").keypress(function(e) {
+		if(e.which == 13) {
+			UserMessageContainer.UserMessage(e,$("#UserInputBox").val());
+			$('#chatwindow').scrollTop($('#chatwindow')[0].scrollHeight);
+		}
+	});
+
+	$(".message").click(function(e){
+		UserMessageContainer.UserMessage(e,$("#UserInputBox").val());
+	});
+  
+  $("#closebutton").click(function(e){
+		 $("#menuoptions").toggle();
+	});
+  
+  
+   
+    $(".StartChat").click(function(){
+		$("#UserInputBox").val("");
+        $("#menuoptions").animate({right: '0'}).animate({top: '0%'},{ queue: false, duration: 1000 }).animate({height: '100%'},{ queue: false, duration: 200 });
+      $('#closebutton').fadeOut({ queue: false, duration: 200 });
+      
+
+		$('#Instruction').text('How can I help you?');
+		BotMessageContainer.BotMessage('Hello');
+		BotMessageContainer.BotMessage('This is purely the front end system for a chatbot.');
+     BotMessageContainer.BotMessage('You can still try it but only sample text is returned');
+		
+		
+		$('#usertextboxmessage').fadeIn(1000);
+		$('#chatwindow').fadeIn(1000);
+		$('#UserInputBox').focus();
+
+    });
 });
 
-function sender() {
-  var msg = $('.txt1').val();
-  $('.main').append('<div class="txt-div" ><div class="txt msg">'+msg+'</div><div class="time">'+new Date().toLocaleTimeString()+'</div></div>');
-  $('.txt1').val('');
-  $('.chat').scrollTop = $('.chat').scrollHeight;
-}
-
-function res(msg) {
-  $('.main').append('<div class="txt-div2" ><div class="txt2 msg">'+msg+'</div><div class="time2">'+new Date().toLocaleTimeString()+'</div></div>');
-}
-
-//var chat = {"Hi":"Hi","Hi2":"Hi2","Hi3":"Hi3"}
-
-
-</script>
-
+    </script>
+</body>
 </html>
