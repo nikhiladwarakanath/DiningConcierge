@@ -34,26 +34,134 @@
 		</div>
 	</div>
 
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+
+
+
+    <script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
+    <script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script type="text/javascript" src="lib/CryptoJS/rollups/sha256.js"></script>
+    <script type="text/javascript" src="lib/CryptoJS/components/hmac.js"></script>
+    <script type="text/javascript" src="lib/CryptoJS/components/enc-base64.js"></script>
+    <script type="text/javascript" src="lib/url-template/url-template.js"></script>
+    <script type="text/javascript" src="lib/apiGatewayCore/sigV4Client.js"></script>
+    <script type="text/javascript" src="lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script type="text/javascript" src="lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
+    <script type="text/javascript" src="apigClient.js"></script>
+
+
 	<script>
+		var apigClient = apigClientFactory.newClient();
+
+		var body = document.getElementById("UserInputBox").value;
+		console.log(body);
+
+		var params = {
+			// This is where any modeled request parameters should be added.
+			// The key is the parameter name, as it is defined in the API in API Gateway.
+			//param0: '',
+			//param1: ''
+		};
+
+		var additionalParams = {
+			// If there are any unmodeled query parameters or headers that must be
+			// sent with the request, add them here.
+			headers: {
+				//param0: '',
+				//param1: ''
+			},
+			queryParams: {
+				//param0: '',
+				//param1: ''
+			}
+		};
+
+
+
+	</script>
+	<script>
+
+		// Initialize the Amazon Cognito credentials provider
+
+		//var url = window.location.href;
+		function getURLParameter(){
+				var values= {};
+				var regex = window.location.href.replace(/[?#&]+([^=&]+)=([^&]*)/gi, function(n, k, val){
+					values[k]= val;
+			});
+			return values;
+		}
+
+   		var jwt = getURLParameter()["client_id"];
+   		console.log(jwt);
+
+   		AWS.config.region = 'us-east-1'; // Region
+		AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+			IdentityPoolId: 'us-east-1:5d18fda8-076d-4e68-94ec-84459fd22fa3',
+			Logins:{
+				'cognito-idp:us-east-1:446015582643:userpool/us-east-1_udkTo15mM': jwt
+			}
+		});
+
+		AWS.config.credentials.refresh(function(){
+
+			var accessKeyId = AWS.config.credentials.accessKeyId;
+			var secretAccessKey = AWS.config.credentials.secretAccessKey;
+			var sessionToken = AWS.config.credentials.sessionToken;
+			AWS.config.region = 'us-east-1';
+			apigClient = apigClientFactory.newClient({
+
+					accessKey: AWS.config.credentials.accessKeyId,
+					secretKey: AWS.config.credentials.secretAccessKey,
+					sessionToken: AWS.config.credentials.sessionToken,
+					region: 'us-east-1'
+
+			});
+
+			
+
+		});
+
+	</script>
+
+
+	<script>
+
 		$(document).ready(function () {
 			window.globalVar = 1;
 
 			//create initial layout
 
 
+			var input;
+			
+
+			//
 
 
 			var ProcessContainer = {
-				ProcessUserMessage: function (e, texttoinput) {
+				ProcessUserMessage: function(e, texttoinput) {
 					window.globalVar += 1;
 					$('.class123').hide();
-					var input = $("#UserInputBox").val();
-					console.log(input);
-					$.post('/chatbot', function(response){
-						message = response.message;
-						console.log("inside post response"+ response.success);
-						console.log("mss"+message);
-					});
+					var message;
+					input = $("#UserInputBox").val();
+					body = {
+						"message": input
+					};
+					console.log(body);
+					/*	$.post('https://nvd2ztleel.execute-api.us-east-1.amazonaws.com/testSTG/chatbot', function (response) {
+							message = response.message;
+							console.log("inside post response" + response.success);
+							console.log("mss" + message);
+						});*/
+					apigClient.chatbotPost(params, body, additionalParams)
+						.then(function (result) {
+							console.log(result.data);
+							message = result.data;
+						}).catch(function (result) {
+							result.innerHTML = "Sorry, API Gateway is not responding";
+						});
 					setTimeout(function () {
 						$("#chatwindow").append("<div id='dotdotdot'><span id='StuLife" + window.globalVar + "' class='options class123' style='float:left;margin-right: 40px; background-color:#77DD77' onclick='test.myFunction(event,this)'><span class='dotA'></span> <span class='dotB'></span> <span class='dotC'></span> </span></div><div style='clear: both'></div>");
 					}, 700);
@@ -112,9 +220,9 @@
 
 
 				$('#Instruction').text('How can I help you?');
-				BotMessageContainer.BotMessage('Hello');
-				BotMessageContainer.BotMessage('This is purely the front end system for a chatbot.');
-				BotMessageContainer.BotMessage('You can still try it but only sample text is returned');
+				BotMessageContainer.BotMessage('I am a Dining Concierge Bot');
+				BotMessageContainer.BotMessage('This is purely designed to help you choose your recommendations');
+				//BotMessageContainer.BotMessage('You can still try it but only sample text is returned');
 
 
 				$('#usertextboxmessage').fadeIn(1000);
